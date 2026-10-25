@@ -1,0 +1,92 @@
+import turtle
+import time
+import math
+import colorsys
+
+screen = turtle.Screen()
+screen.bgcolor("black")
+screen.setup(width=800, height=600)
+turtle.tracer(0, 0) 
+
+
+t = turtle.Turtle()
+t.speed(0)
+t.hideturtle()
+t.pensize(6)  
+
+
+def draw_limb(x, y, angle, length):
+    t.penup()
+    t.goto(x, y)
+    t.pendown()
+    rad = math.radians(angle)
+    end_x = x + length * math.cos(rad)
+    end_y = y + length * math.sin(rad)
+    t.goto(end_x, end_y)
+    return end_x, end_y
+
+
+def draw_running_man(frame_count, position_x):
+    t.clear()
+    
+   
+    hue = (frame_count * 0.02) % 1.0
+    rgb = colorsys.hsv_to_rgb(hue, 1.0, 1.0)
+    t.color(rgb) 
+    
+   
+    swing = math.sin(frame_count * 0.4)
+    
+   
+    body_y = 0 + abs(swing) * 5
+    
+    t.penup()
+    t.goto(position_x, body_y + 60)
+    t.pendown()
+    t.circle(15)
+    
+    
+    t.penup()
+    t.goto(position_x, body_y + 60)
+    t.pendown()
+    t.goto(position_x - 5, body_y + 10)  
+    
+    hip_x, hip_y = position_x - 5, body_y + 10
+    shoulder_x, shoulder_y = position_x - 2, body_y + 50
+    
+ 
+    k1_x, k1_y = draw_limb(hip_x, hip_y, 240 + swing * 30, 30)
+    draw_limb(k1_x, k1_y, 270 + swing * 20, 35)
+    
+   
+    k2_x, k2_y = draw_limb(hip_x, hip_y, 280 - swing * 35, 30)
+    draw_limb(k2_x, k2_y, 250 - swing * 40, 35)
+    
+   
+
+    e1_x, e1_y = draw_limb(shoulder_x, shoulder_y, 160 - swing * 40, 25)
+    draw_limb(e1_x, e1_y, 220 - swing * 20, 25)
+    
+   
+    e2_x, e2_y = draw_limb(shoulder_x, shoulder_y, 340 + swing * 40, 25)
+    draw_limb(e2_x, e2_y, 40 + swing * 30, 25)
+
+
+frame = 0
+x_pos = -300  
+
+while True:
+    draw_running_man(frame, x_pos)
+    turtle.update()
+    
+    
+    x_pos += 4
+    frame += 1
+    
+    
+    if x_pos > 400:
+        x_pos = -400
+        
+    time.sleep(0.03)
+
+turtle.done()
